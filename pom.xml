@@ -12,11 +12,32 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <wildfly.version>33.0.2.Final</wildfly.version>
     </properties>
 
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.wildfly.plugins</groupId>
+                    <artifactId>wildfly-maven-plugin</artifactId>
+                    <version>5.0.0.Final</version>
+                    <configuration>
+                        <version>${wildfly.version}</version>
+                        <feature-packs>
+                            <feature-pack>
+                                <groupId>org.wildfly</groupId>
+                                <artifactId>wildfly-ee-galleon-pack</artifactId>
+                                <version>${wildfly.version}</version>
+                            </feature-pack>
+                        </feature-packs>
+                        <layers>
+                            <layer>jaxrs</layer>
+                            <layer>microprofile-reactive-messaging</layer>
+                        </layers>
+                    </configuration>
+                </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
@@ -29,27 +50,17 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>jakarta.platform</groupId>
-                <artifactId>jakarta.jakartaee-api</artifactId>
-                <version>10.0.0</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>2.0.16</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.microprofile.config</groupId>
-                <artifactId>microprofile-config-api</artifactId>
-                <version>3.1</version>
-                <scope>provided</scope>
+                <groupId>org.wildfly.bom</groupId>
+                <artifactId>wildfly-microprofile</artifactId>
+                <version>${wildfly.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
-
     <modules>
+        <module>wfmicroprofile-reactive-kafka</module>
         <module>wfmicroprofile-rest</module>
     </modules>
 </project>
